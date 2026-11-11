@@ -1,0 +1,624 @@
+<!DOCTYPE html>
+<html lang="es" class="h-full w-full bg-[#f4f7f6]">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>Gestionar - Kiosco Interactivo Premium (16:9)</title>
+    
+    <!-- Estilos Personalizados Locales -->
+    <link rel="stylesheet" href="css/styles.css">
+
+    <!-- Tailwind CSS Local (Offline) -->
+    <script src="js/tailwind.cdn.js"></script>
+    <script>
+        if (window.tailwind) {
+            tailwind.config = {
+                theme: {
+                    extend: {
+                        colors: {
+                            gestionar: {
+                                main: '#159db4',
+                                light: '#4eb5be',
+                                dark: '#008492',
+                                gray: '#58585a',
+                                bg: '#f0f4f5'
+                            }
+                        },
+                        fontFamily: {
+                            title: ['"Google Sans"', 'sans-serif'],
+                            body: ['"Google Sans"', 'sans-serif']
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="relative h-screen w-screen overflow-hidden bg-gestionar-bg">
+
+    <!-- ================= MODAL POPUP REUTILIZABLE ================= -->
+    <div id="info-modal" class="modal-overlay hidden" onclick="closeModal()">
+        <div class="modal-box relative" onclick="event.stopPropagation()">
+            <button onclick="closeModal()" class="absolute top-5 right-5 w-10 h-10 rounded-full bg-slate-100 text-gestionar-gray hover:text-gestionar-dark hover:bg-slate-200 flex items-center justify-center text-xl transition-all font-bold">
+                ✕
+            </button>
+            <h3 id="modal-title" class="text-2xl title-font text-gestionar-dark mb-4 pr-8 border-b border-slate-100 pb-3"></h3>
+            <div id="modal-body" class="text-base text-gestionar-gray leading-relaxed font-normal"></div>
+            <div class="mt-8 pt-4 border-t border-slate-100 flex justify-end">
+                <button onclick="closeModal()" class="px-6 py-2.5 rounded-full bg-gestionar-main text-white font-bold text-sm hover:bg-gestionar-dark transition-colors shadow-sm">
+                    Entendido
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ================= 1. PANTALLA INTRO ================= -->
+    <div id="screen-intro" class="screen active justify-center items-center text-center p-8 gap-6 cursor-pointer" onclick="transitionTo('screen-selection')">
+        <video autoplay loop muted playsinline class="video-bg opacity-20">
+            <source src="assets/videos/fondo_intro.mp4" type="video/mp4">
+        </video>
+
+        <div class="flex flex-col items-center max-w-4xl">
+            <img src="assets/img/logo-gestionar.svg" alt="Gestionar" class="logo-hero">
+            <h1 class="text-4xl md:text-5xl title-font tracking-tight text-gestionar-dark mb-3 leading-tight">
+                Administrá con visión 360°
+            </h1>
+            <p class="text-lg md:text-xl font-light text-gestionar-gray leading-relaxed max-w-2xl">
+                Maximizamos el potencial de tu administración de consorcios
+            </p>
+        </div>
+
+        <div class="mt-4">
+            <div class="crystal-glow-btn cursor-pointer group">
+                <div class="w-9 h-9 rounded-full bg-gestionar-main text-white flex items-center justify-center text-base group-hover:scale-110 transition-transform">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 15l-2 5L9 9l11 4-5 2zm0 0l5 5M7.188 2.239l.777 2.897M5.136 7.965l-2.898-.777M13.95 4.05l-2.122 2.122m-5.657 5.656l-2.12 2.122"></path>
+                    </svg>
+                </div>
+                <span class="text-base font-bold tracking-widest uppercase text-gestionar-dark title-font">
+                    Tocar para explorar
+                </span>
+            </div>
+        </div>
+    </div>
+
+    <!-- ================= 2. PANTALLA SELECCIÓN ================= -->
+    <div id="screen-selection" class="screen justify-between !p-0">
+        <div class="absolute top-6 left-8 right-8 flex justify-between items-center z-30 pointer-events-none">
+            <img src="assets/img/logo-gestionar.svg" alt="Gestionar" class="logo-header pointer-events-auto">
+            <button onclick="transitionTo('screen-intro')" class="px-5 py-2.5 rounded-full bg-white/90 border border-slate-200 text-gestionar-gray text-sm hover:text-gestionar-dark font-medium shadow-sm transition-all pointer-events-auto flex items-center gap-1.5">
+                <span>✕</span> Salir
+            </button>
+        </div>
+
+        <div class="grid grid-cols-2 w-full h-full">
+            <div onclick="transitionTo('screen-cerplus')" class="relative w-full h-full cursor-pointer flex flex-col justify-between p-12 pt-24 border-r border-slate-200 group overflow-hidden bg-white">
+                <video autoplay loop muted playsinline class="absolute inset-0 w-full h-full object-cover opacity-20 group-hover:opacity-40 transition-opacity duration-700 pointer-events-none">
+                    <source src="assets/videos/loop_cerplus.mp4" type="video/mp4">
+                </video>
+
+                <div class="relative z-10 max-w-xl">
+                    <div class="h-20 mb-8">
+                        <img src="assets/img/logo-cerplus.svg" alt="CER Plus" class="h-full object-contain">
+                    </div>
+                    <h3 class="text-[2.8rem] title-font text-gestionar-main mb-6 leading-tight">Un servicio. Todas las Soluciones.</h3>
+                    <p class="text-[1.15rem] text-gestionar-gray font-light leading-relaxed">
+                        Simplificá la administración, garantizá el cumplimiento normativo y convertí gastos grandes en cuotas accesibles. Incluye Red de Prevención y plataforma Octonar.
+                    </p>
+                </div>
+                
+                <div class="relative z-10 flex items-center justify-between pt-6 border-t border-slate-200/60">
+                    <span class="text-gestionar-main font-semibold text-base">Ver detalle del servicio</span>
+                    <div class="w-12 h-12 rounded-full bg-gestionar-main text-white flex items-center justify-center text-xl group-hover:scale-110 transition-transform">→</div>
+                </div>
+            </div>
+
+            <div onclick="transitionTo('screen-seguros')" class="relative w-full h-full cursor-pointer flex flex-col justify-between p-12 pt-24 group overflow-hidden bg-white">
+                <video autoplay loop muted playsinline class="absolute inset-0 w-full h-full object-cover opacity-20 group-hover:opacity-40 transition-opacity duration-700 pointer-events-none">
+                    <source src="assets/videos/loop_seguros.mp4" type="video/mp4">
+                </video>
+
+                <div class="relative z-10 max-w-xl">
+                    <div class="h-20 mb-8">
+                        <img src="assets/img/logo-seguros.svg" alt="Seguros" class="h-full object-contain">
+                    </div>
+                    <h3 class="text-[2.8rem] title-font text-gestionar-dark mb-6 leading-tight">Soluciones a medida para consorcios</h3>
+                    <p class="text-[1.15rem] text-gestionar-gray font-light leading-relaxed">
+                        Cobertura integral para propiedad horizontal. Prevención, protección total y acompañamiento personalizado en siniestros con las mejores aseguradoras.
+                    </p>
+                </div>
+                
+                <div class="relative z-10 flex items-center justify-between pt-6 border-t border-slate-200/60">
+                    <span class="text-gestionar-dark font-semibold text-base">Ver coberturas disponibles</span>
+                    <div class="w-12 h-12 rounded-full bg-gestionar-dark text-white flex items-center justify-center text-xl group-hover:scale-110 transition-transform">→</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ================= 3. PANTALLA CER PLUS ================= -->
+    <div id="screen-cerplus" class="screen justify-between p-6">
+        <!-- Header de navegación -->
+        <div class="flex justify-between items-center mb-3">
+            <div class="flex items-center gap-4">
+                <img src="assets/img/logo-gestionar.svg" alt="Gestionar" class="logo-header">
+                <span class="text-2xl font-light text-slate-300">|</span>
+                <img src="assets/img/logo-cerplus.svg" alt="CER Plus" class="logo-header">
+            </div>
+            <div class="flex items-center gap-3">
+                <button onclick="transitionTo('screen-selection')" class="px-5 py-2.5 rounded-full bg-white border border-slate-200 text-gestionar-gray text-xs hover:text-gestionar-dark font-medium shadow-sm transition-all flex items-center gap-1.5">
+                    ← Volver a Productos
+                </button>
+                <button onclick="transitionTo('screen-intro')" class="px-4 py-2.5 rounded-full bg-white border border-slate-200 text-gestionar-gray text-xs hover:text-gestionar-dark font-medium shadow-sm transition-all flex items-center gap-1.5">
+                    <span>✕</span> Salir
+                </button>
+            </div>
+        </div>
+
+        <div class="flex flex-col justify-between gap-4 my-auto h-[83vh] w-full">
+            
+            <!-- Banner Informativo -->
+            <div class="w-full crystal-bento rounded-2xl p-4 px-6 border border-white shadow-sm flex items-center justify-between bg-gradient-to-r from-white via-slate-50 to-white">
+                <div class="flex items-center gap-4">
+                    <span class="text-3xl">💡</span>
+                    <div>
+                        <h3 class="text-lg font-bold text-gestionar-dark title-font">¿Por qué conviene CER Plus?</h3>
+                        <p class="text-xs text-gestionar-gray font-light">Simplificá la gestión integral de tus consorcios, garantizá el cumplimiento normativo y convertí gastos grandes en cuotas fijas y accesibles.</p>
+                    </div>
+                </div>
+                <div class="flex gap-6 text-xs text-gestionar-gray font-medium">
+                    <span class="flex items-center gap-1.5"><span class="text-gestionar-main font-bold">✓</span> Cumplimiento normativo</span>
+                    <span class="flex items-center gap-1.5"><span class="text-gestionar-main font-bold">✓</span> Previsibilidad financiera</span>
+                    <span class="flex items-center gap-1.5"><span class="text-gestionar-main font-bold">✓</span> Aliado técnico 24/7</span>
+                </div>
+            </div>
+
+            <!-- Grilla 3 Secciones (Trámites, Seguridad, Academia) -->
+            <div class="grid grid-cols-3 gap-6 flex-1 items-stretch">
+                
+                <!-- SECCIÓN 1: TRÁMITES -->
+                <div class="flex flex-col gap-3">
+                    <div class="flex items-center justify-center gap-2 pb-2 border-b border-slate-200/80 text-center">
+                        <span class="text-lg">📋</span>
+                        <h4 class="text-base font-bold text-gestionar-dark title-font">Trámites</h4>
+                    </div>
+                    <div class="grid grid-cols-2 gap-4 my-auto flex-1 items-center">
+                        <div onclick="openModal('Declaración Jurada Anual', '<p class=\'text-slate-700 leading-relaxed\'>Confección integral, presentación oficial y seguimiento continuo de la Declaración Jurada Anual obligatoria ante el RPA para CABA y PBA.</p>')" class="flex flex-col items-center justify-center text-center cursor-pointer group p-2">
+                            <div class="w-24 h-24 rounded-[22px] bg-[#d8f3f6] text-gestionar-dark flex items-center justify-center mb-2 icon-float border border-gestionar-main/20 shadow-sm">
+                                <svg class="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                            </div>
+                            <span class="text-sm font-bold text-slate-800 leading-tight">DDJJ Anual</span>
+                            <span class="text-xs text-slate-500 font-medium mt-1">Capital y PBA</span>
+                        </div>
+
+                        <div onclick="openModal('Obleas Reglamentarias', '<p class=\'text-slate-700 leading-relaxed\'>Gestión y obtención de obleas oficiales obligatorias para ascensores, instalaciones térmicas y equipos contra incendio.</p>')" class="flex flex-col items-center justify-center text-center cursor-pointer group p-2">
+                            <div class="w-24 h-24 rounded-[22px] bg-[#d8f3f6] text-gestionar-dark flex items-center justify-center mb-2 icon-float border border-gestionar-main/20 shadow-sm">
+                                <svg class="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M7 7h.01M7 11h.01M7 15h.01M11 7h7m-7 4h7m-7 4h7M5 3h14a2 2 0 012 2v14a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 01-2-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
+                            </div>
+                            <span class="text-sm font-bold text-slate-800 leading-tight">Obleas</span>
+                            <span class="text-xs text-slate-500 font-medium mt-1">Reglamentarias</span>
+                        </div>
+
+                        <div onclick="openModal('Altas, Bajas y Vinculaciones', '<p class=\'text-slate-700 leading-relaxed\'>Altas/bajas ante el RPA, vinculación con AGIP, cambios de mantenedores e inscripción RSU.</p>')" class="flex flex-col items-center justify-center text-center cursor-pointer group p-2">
+                            <div class="w-24 h-24 rounded-[22px] bg-[#d8f3f6] text-gestionar-dark flex items-center justify-center mb-2 icon-float border border-gestionar-main/20 shadow-sm">
+                                <svg class="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4"></path></svg>
+                            </div>
+                            <span class="text-sm font-bold text-slate-800 leading-tight">Altas / Bajas</span>
+                            <span class="text-xs text-slate-500 font-medium mt-1">y Vinculaciones</span>
+                        </div>
+
+                        <div onclick="openModal('Renovación de Matrícula', '<p class=\'text-slate-700 leading-relaxed\'>Gestión integral de requisitos y presentación de documentación para la renovación anual de la matrícula de administrador.</p>')" class="flex flex-col items-center justify-center text-center cursor-pointer group p-2">
+                            <div class="w-24 h-24 rounded-[22px] bg-[#d8f3f6] text-gestionar-dark flex items-center justify-center mb-2 icon-float border border-gestionar-main/20 shadow-sm">
+                                <svg class="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M10 6H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V8a2 2 0 00-2-2h-5m-4 0V5a2 2 0 012-2h2a2 2 0 012 2v1m-6 0h6"></path></svg>
+                            </div>
+                            <span class="text-sm font-bold text-slate-800 leading-tight">Renovación Matrícula</span>
+                            <span class="text-xs text-slate-500 font-medium mt-1">Capital y PBA</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- SECCIÓN 2: SEGURIDAD -->
+                <div class="flex flex-col gap-3">
+                    <div class="flex items-center justify-center gap-2 pb-2 border-b border-slate-200/80 text-center">
+                        <span class="text-lg">🛡️</span>
+                        <h4 class="text-base font-bold text-gestionar-dark title-font">Seguridad</h4>
+                    </div>
+                    <div class="grid grid-cols-2 gap-4 my-auto flex-1 items-center">
+                        <div onclick="openModal('Ley 6116 - Conservación de Fachadas', '<p class=\'text-slate-700 leading-relaxed\'>Certificación de seguridad edilicia conforme a la Ley 6116, tramitación de eximición e informe técnico anual de conservación.</p>')" class="flex flex-col items-center justify-center text-center cursor-pointer group p-2">
+                            <div class="w-24 h-24 rounded-[22px] bg-[#d8f3f6] text-gestionar-dark flex items-center justify-center mb-2 icon-float border border-gestionar-main/20 shadow-sm">
+                                <svg class="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path></svg>
+                            </div>
+                            <span class="text-sm font-bold text-slate-800 leading-tight">Ley 6116</span>
+                            <span class="text-xs text-slate-500 font-medium mt-1">Fachadas</span>
+                        </div>
+
+                        <div onclick="openModal('Medición Puesta a Tierra', '<p class=\'text-slate-700 leading-relaxed\'>Medición técnica e informe con protocolo homologado obligatorio de Puesta a Tierra según normativas vigentes.</p>')" class="flex flex-col items-center justify-center text-center cursor-pointer group p-2">
+                            <div class="w-24 h-24 rounded-[22px] bg-[#d8f3f6] text-gestionar-dark flex items-center justify-center mb-2 icon-float border border-gestionar-main/20 shadow-sm">
+                                <svg class="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+                            </div>
+                            <span class="text-sm font-bold text-slate-800 leading-tight">Medición PAT</span>
+                            <span class="text-xs text-slate-500 font-medium mt-1">Puesta a Tierra</span>
+                        </div>
+
+                        <div onclick="openModal('Instalación de Jabalina', '<p class=\'text-slate-700 leading-relaxed\'>Provisión, hincado e instalación técnica de jabalina para la adecuación y protección del sistema eléctrico edilicio.</p>')" class="flex flex-col items-center justify-center text-center cursor-pointer group p-2">
+                            <div class="w-24 h-24 rounded-[22px] bg-[#d8f3f6] text-gestionar-dark flex items-center justify-center mb-2 icon-float border border-gestionar-main/20 shadow-sm">
+                                <svg class="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M12 3v10m0 0l-3-3m3 3l3-3m-6 6h6"></path></svg>
+                            </div>
+                            <span class="text-sm font-bold text-slate-800 leading-tight">Instalación</span>
+                            <span class="text-xs text-slate-500 font-medium mt-1">de Jabalina</span>
+                        </div>
+
+                        <div onclick="transitionTo('screen-prevencion')" class="flex flex-col items-center justify-center text-center cursor-pointer group p-2 relative">
+                            <div class="w-24 h-24 rounded-[22px] bg-gradient-to-br from-[#0c4a6e] to-[#082f49] p-3.5 flex items-center justify-center mb-2 icon-float relative shadow-md border border-sky-400/30">
+                                <span class="absolute -top-2 -right-2 text-[8px] bg-amber-400 text-slate-900 font-black px-2 py-0.5 rounded-full uppercase tracking-wider shadow">Nuevo</span>
+                                <img src="assets/img/previcon.svg" alt="Red de Prevención" class="w-12 h-12 object-contain filter brightness-0 invert drop-shadow">
+                            </div>
+                            <span class="text-sm font-bold text-gestionar-dark leading-tight">Red de Prevención</span>
+                            <span class="text-xs text-gestionar-main font-semibold mt-1">Servicio Edilicio</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- SECCIÓN 3: ACADEMIA -->
+                <div class="flex flex-col gap-3">
+                    <div class="flex items-center justify-center gap-2 pb-2 border-b border-slate-200/80 text-center">
+                        <span class="text-lg">🎓</span>
+                        <h4 class="text-base font-bold text-gestionar-dark title-font">Academia</h4>
+                    </div>
+                    <div class="grid grid-cols-2 gap-4 my-auto flex-1 items-center">
+                        <div onclick="openModal('Curso de Renovación', '<p class=\'text-slate-700 leading-relaxed\'>Cursos oficiales homologados para renovación periódica de matrícula de administrador en Capital Federal.</p>')" class="flex flex-col items-center justify-center text-center cursor-pointer group p-2">
+                            <div class="w-24 h-24 rounded-[22px] bg-[#d8f3f6] text-gestionar-dark flex items-center justify-center mb-2 icon-float border border-gestionar-main/20 shadow-sm">
+                                <svg class="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M12 14l9-5-9-5-9 5 9 5z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M12 14l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14z"></path></svg>
+                            </div>
+                            <span class="text-sm font-bold text-slate-800 leading-tight">Curso Renovación</span>
+                            <span class="text-xs text-slate-500 font-medium mt-1">CABA</span>
+                        </div>
+
+                        <div onclick="openModal('Curso de Matriculación', '<p class=\'text-slate-700 leading-relaxed\'>Capacitación oficial de inicio para la obtención de la matrícula de Administrador de Consorcios.</p>')" class="flex flex-col items-center justify-center text-center cursor-pointer group p-2">
+                            <div class="w-24 h-24 rounded-[22px] bg-[#d8f3f6] text-gestionar-dark flex items-center justify-center mb-2 icon-float border border-gestionar-main/20 shadow-sm">
+                                <svg class="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M15 15l-2 5L9 9l11 4-5 2zm0 0l5 5M7.188 2.239l.777 2.897M5.136 7.965l-2.898-.777M13.95 4.05l-2.122 2.122m-5.657 5.656l-2.12 2.122"></path></svg>
+                            </div>
+                            <span class="text-sm font-bold text-slate-800 leading-tight">Curso</span>
+                            <span class="text-xs text-slate-500 font-medium mt-1">Matriculación</span>
+                        </div>
+
+                        <div onclick="openModal('Talleres Online EPA', '<p class=\'text-slate-700 leading-relaxed\'>Talleres virtuales continuos de actualización normativa, legal y técnica para administradores.</p>')" class="flex flex-col items-center justify-center text-center cursor-pointer group p-2">
+                            <div class="w-24 h-24 rounded-[22px] bg-[#d8f3f6] text-gestionar-dark flex items-center justify-center mb-2 icon-float border border-gestionar-main/20 shadow-sm">
+                                <svg class="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg>
+                            </div>
+                            <span class="text-sm font-bold text-slate-800 leading-tight">Talleres Online</span>
+                            <span class="text-xs text-slate-500 font-medium mt-1">EPA</span>
+                        </div>
+
+                        <div onclick="openModal('Evento Exclusivo EPA', '<p class=\'text-slate-700 leading-relaxed\'>Acceso al Evento para Administradores de Consorcio (EPA), jornadas de networking y paneles técnicos.</p>')" class="flex flex-col items-center justify-center text-center cursor-pointer group p-2">
+                            <div class="w-24 h-24 rounded-[22px] bg-[#d8f3f6] text-gestionar-dark flex items-center justify-center mb-2 icon-float border border-gestionar-main/20 shadow-sm">
+                                <svg class="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M17 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>
+                            </div>
+                            <span class="text-sm font-bold text-slate-800 leading-tight">Evento Exclusivo</span>
+                            <span class="text-xs text-slate-500 font-medium mt-1">Admin EPA</span>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- Pie de página: Plataforma Octonar -->
+            <div onclick="openOctonarOnline()" class="w-full rounded-2xl p-4 flex items-center justify-between px-8 cursor-pointer border border-slate-300 shadow-sm hover:shadow-md transition-all group" style="background: linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 50%, #cbd5e1 100%);">
+                <div class="flex items-center gap-5">
+                    <img src="assets/img/isooctonar.fw.svg" alt="Octonar" class="w-14 h-14 object-contain group-hover:scale-105 transition-transform drop-shadow-sm">
+                    <div class="text-left">
+                        <h4 class="text-lg font-bold text-slate-800 title-font leading-tight">Plataforma Octonar</h4>
+                        <p class="text-xs text-slate-600 font-normal">Acceso digital y gestión unificada para tu administración 24/7</p>
+                    </div>
+                </div>
+                <div class="px-6 py-2.5 rounded-full bg-gestionar-main text-white text-xs font-bold shadow-sm group-hover:bg-gestionar-dark transition-colors flex items-center gap-2">
+                    <span>Ingresar a la Plataforma</span>
+                    <span class="text-sm">↗</span>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+<!-- ================= 4. PANTALLA RED DE PREVENCIÓN ================= -->
+<div id="screen-prevencion" class="screen justify-between p-6 relative">
+    <!-- Header de navegación superior -->
+    <div class="flex justify-between items-center mb-3 z-10">
+        <div class="flex items-center gap-4">
+            <img src="assets/img/logo-gestionar.svg" alt="Gestionar" class="logo-header">
+            <span class="text-2xl font-light text-slate-300">|</span>
+            <img src="assets/img/logo-prevencion.svg" alt="Red de Prevención" class="logo-header">
+        </div>
+        <div class="flex items-center gap-3">
+            <button onclick="transitionTo('screen-cerplus')" class="px-5 py-2.5 rounded-full bg-white border border-slate-200 text-gestionar-gray text-xs hover:text-gestionar-dark font-medium shadow-sm transition-all flex items-center gap-1.5 cursor-pointer">
+                ← Volver a CER Plus
+            </button>
+            <button onclick="transitionTo('screen-intro')" class="px-4 py-2.5 rounded-full bg-white border border-slate-200 text-gestionar-gray text-xs hover:text-gestionar-dark font-medium shadow-sm transition-all flex items-center gap-1.5 cursor-pointer">
+                <span>✕</span> Salir
+            </button>
+        </div>
+    </div>
+
+    <!-- Contenido Principal: Video a la Izquierda + Bloque Central -->
+    <div class="grid grid-cols-12 gap-5 my-auto h-[83vh] z-10 w-full">
+        
+        <!-- COLUMNA IZQUIERDA: VIDEO TRABAJO EN CAMPO (3 Cols) -->
+        <div class="col-span-3 bg-slate-900 rounded-3xl overflow-hidden relative shadow-lg h-full flex items-center justify-center border border-slate-800">
+            <video autoplay loop muted playsinline class="w-full h-full object-cover">
+                <source src="assets/videos/loop_prevencion.mp4" type="video/mp4">
+                <source src="assets/videos/fondo_prevencion.mp4" type="video/mp4">
+            </video>
+            <div class="absolute inset-0 bg-gradient-to-t from-slate-950/70 via-transparent to-transparent pointer-events-none"></div>
+            <span class="absolute bottom-6 left-6 text-white text-xs font-medium tracking-wide bg-gestionar-dark/80 px-3.5 py-1.5 rounded-full backdrop-blur-md border border-white/20 shadow-md">
+                ▶ Trabajo en Campo
+            </span>
+        </div>
+
+        <!-- COLUMNA DERECHA: TARJETA PRINCIPAL + BANNER OCTONAR (9 Cols) -->
+        <div class="col-span-9 flex flex-col justify-between gap-4 h-full">
+            
+            <!-- TARJETA PRINCIPAL RED DE PREVENCIÓN -->
+            <div class="crystal-bento rounded-3xl p-8 flex-1 shadow-sm border border-white flex flex-col justify-between bg-white/90">
+                <div>
+                    <!-- Encabezado de la Tarjeta -->
+                    <div class="grid grid-cols-12 gap-6 items-center mb-6 pb-6 border-b border-slate-100">
+                        <div class="col-span-7">
+                            <h3 class="text-3xl font-bold text-gestionar-gray title-font mb-2 tracking-tight">
+                                tecnología y trabajo en campo
+                            </h3>
+                            <div class="flex gap-4 text-xs text-gestionar-gray font-medium">
+                                <span class="flex items-center gap-1"><span class="text-gestionar-main font-bold">✓</span> Ahorro de tiempo</span>
+                                <span class="flex items-center gap-1"><span class="text-gestionar-main font-bold">✓</span> Prevención de sanciones</span>
+                                <span class="flex items-center gap-1"><span class="text-gestionar-main font-bold">✓</span> Respaldo documental</span>
+                            </div>
+                        </div>
+                        
+                        <div class="col-span-5 border border-slate-200/80 rounded-2xl p-4 bg-slate-50/50">
+                            <p class="text-xs text-gestionar-gray font-light leading-relaxed">
+                                Inspeccionamos de forma exhaustiva los 15 sectores críticos de tus consorcios para optimizar la seguridad y el cumplimiento normativo.
+                            </p>
+                        </div>
+                    </div>
+                    
+                    <!-- Grilla de 4 Tarjetas Icónicas Horizontal -->
+                    <div class="grid grid-cols-4 gap-6 my-auto items-stretch pt-2">
+                        
+                        <!-- 1. Visitas Presenciales (Ícono Ojo) -->
+                        <div onclick="openModal('Visitas Presenciales', '<div class=\'space-y-3 text-slate-700\'><p class=\'leading-relaxed\'>Inspecciones periódicas programadas para evaluar el estado edilicio general:</p><ul class=\'space-y-2 text-sm mt-2\'><li class=\'flex items-center gap-2\'><span class=\'text-gestionar-main font-bold\'>•</span> Tres inspecciones presenciales al año por consorcio.</li><li class=\'flex items-center gap-2\'><span class=\'text-gestionar-main font-bold\'>•</span> Relevamiento exhaustivo de los 15 sectores clave del edificio.</li><li class=\'flex items-center gap-2\'><span class=\'text-gestionar-main font-bold\'>•</span> Informe comparativo de evolución e historial técnico en plataforma.</li></ul></div>')" 
+                             class="flex flex-col items-center justify-center text-center cursor-pointer group p-3 rounded-2xl hover:bg-slate-50 border border-transparent hover:border-slate-200 transition-all">
+                            <div class="w-28 h-28 rounded-2xl bg-slate-100/80 text-gestionar-dark flex items-center justify-center mb-3 group-hover:scale-105 transition-transform border border-slate-200/60 shadow-sm">
+                                <svg class="w-12 h-12 text-slate-600 group-hover:text-gestionar-main transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
+                                </svg>
+                            </div>
+                            <span class="text-sm font-bold text-gestionar-dark leading-snug">Visitas Presenciales</span>
+                        </div>
+
+                        <!-- 2. Infraestructura Crítica (Ícono Alerta/Peligro) -->
+                        <div onclick="openModal('Infraestructura Crítica', '<div class=\'space-y-3 text-slate-700\'><p class=\'leading-relaxed\'>Diagnóstico de estado sobre los sectores de alto riesgo operativo e instalaciones del edificio:</p><ul class=\'space-y-2 text-sm mt-2\'><li class=\'flex items-start gap-2\'><span class=\'text-gestionar-main font-bold mt-0.5\'>•</span> <span><strong>Sala de máquinas:</strong> Motores, tablero eléctrico, elementos de seguridad y puertas.</span></li><li class=\'flex items-start gap-2\'><span class=\'text-gestionar-main font-bold mt-0.5\'>•</span> <span><strong>Bombas y tanque cisterna:</strong> Bombas elevadoras, ventilación, tablero cerrado y estado del tanque.</span></li><li class=\'flex items-start gap-2\'><span class=\'text-gestionar-main font-bold mt-0.5\'>•</span> <span><strong>Sala de gas:</strong> Medidores, instalación, ventilación y remoción de artículos ajenos.</span></li><li class=\'flex items-start gap-2\'><span class=\'text-gestionar-main font-bold mt-0.5\'>•</span> <span><strong>Tablero eléctrico y grupo electrógeno:</strong> Tapones fusibles, térmicas y prueba funcional del generador.</span></li></ul></div>')" 
+                             class="flex flex-col items-center justify-center text-center cursor-pointer group p-3 rounded-2xl hover:bg-slate-50 border border-transparent hover:border-slate-200 transition-all">
+                            <div class="w-28 h-28 rounded-2xl bg-slate-100/80 text-gestionar-dark flex items-center justify-center mb-3 group-hover:scale-105 transition-transform border border-slate-200/60 shadow-sm">
+                                <svg class="w-12 h-12 text-slate-600 group-hover:text-gestionar-main transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path>
+                                </svg>
+                            </div>
+                            <span class="text-sm font-bold text-gestionar-dark leading-snug">Infraestructura Crítica</span>
+                        </div>
+
+                        <!-- 3. Puntos de Control (15 Sectores Relevados en Visita Inicial) -->
+                        <div onclick="openModal('Los 15 Sectores de Relevamiento', '<div class=\'grid grid-cols-2 gap-x-6 gap-y-3 text-slate-700 text-xs max-h-[60vh] overflow-y-auto pr-1\'><div class=\'p-2.5 rounded-xl bg-slate-50 border border-slate-100\'><p class=\'font-bold text-gestionar-dark mb-0.5\'>1. Terraza y azotea</p><p class=\'text-slate-600 font-light\'>Impermeabilización de losa, accesos, desgaste y elementos de riesgo.</p></div><div class=\'p-2.5 rounded-xl bg-slate-50 border border-slate-100\'><p class=\'font-bold text-gestionar-dark mb-0.5\'>2. Tanque de agua</p><p class=\'text-slate-600 font-light\'>Estado, tapas, capacidad y fecha de la última limpieza.</p></div><div class=\'p-2.5 rounded-xl bg-slate-50 border border-slate-100\'><p class=\'font-bold text-gestionar-dark mb-0.5\'>3. Sala de máquinas</p><p class=\'text-slate-600 font-light\'>Motores, tablero eléctrico, elementos de seguridad y puertas.</p></div><div class=\'p-2.5 rounded-xl bg-slate-50 border border-slate-100\'><p class=\'font-bold text-gestionar-dark mb-0.5\'>4. Palieres y pisos</p><p class=\'text-slate-600 font-light\'>Pintura, cristales, iluminación, cestos y estado general.</p></div><div class=\'p-2.5 rounded-xl bg-slate-50 border border-slate-100\'><p class=\'font-bold text-gestionar-dark mb-0.5\'>5. Balcones</p><p class=\'text-slate-600 font-light\'>Herrería, toldos y objetos de riesgo.</p></div><div class=\'p-2.5 rounded-xl bg-slate-50 border border-slate-100\'><p class=\'font-bold text-gestionar-dark mb-0.5\'>6. Escaleras</p><p class=\'text-slate-600 font-light\'>Tipo, cristales, antideslizantes, iluminación y matafuegos.</p></div><div class=\'p-2.5 rounded-xl bg-slate-50 border border-slate-100\'><p class=\'font-bold text-gestionar-dark mb-0.5\'>7. Ascensores</p><p class=\'text-slate-600 font-light\'>Tipo de puertas, obleas reglamentarias AGC y última inspección.</p></div><div class=\'p-2.5 rounded-xl bg-slate-50 border border-slate-100\'><p class=\'font-bold text-gestionar-dark mb-0.5\'>8. Hall de entrada / acceso</p><p class=\'text-slate-600 font-light\'>Pintura, cristales, iluminación, cámaras, cestos y cerradura.</p></div><div class=\'p-2.5 rounded-xl bg-slate-50 border border-slate-100\'><p class=\'font-bold text-gestionar-dark mb-0.5\'>9. Fachada y medianeras</p><p class=\'text-slate-600 font-light\'>Estado general, equipos de aire acondicionado y elementos ajenos.</p></div><div class=\'p-2.5 rounded-xl bg-slate-50 border border-slate-100\'><p class=\'font-bold text-gestionar-dark mb-0.5\'>10. Cocheras</p><p class=\'text-slate-600 font-light\'>Pintura, portón y espacio de guarda.</p></div><div class=\'p-2.5 rounded-xl bg-slate-50 border border-slate-100\'><p class=\'font-bold text-gestionar-dark mb-0.5\'>11. Bombas y tanque cisterna</p><p class=\'text-slate-600 font-light\'>Bombas elevadoras, ventilación, tablero cerrado y tanque.</p></div><div class=\'p-2.5 rounded-xl bg-slate-50 border border-slate-100\'><p class=\'font-bold text-gestionar-dark mb-0.5\'>12. Sala de gas</p><p class=\'text-slate-600 font-light\'>Medidores, instalación, ventilación y artículos ajenos.</p></div><div class=\'p-2.5 rounded-xl bg-slate-50 border border-slate-100\'><p class=\'font-bold text-gestionar-dark mb-0.5\'>13. Tablero eléctrico y grupo</p><p class=\'text-slate-600 font-light\'>Tapones fusibles y funcionamiento del generador.</p></div><div class=\'p-2.5 rounded-xl bg-slate-50 border border-slate-100\'><p class=\'font-bold text-gestionar-dark mb-0.5\'>14. Matafuegos y cartelería</p><p class=\'text-slate-600 font-light\'>Vencimientos, luces de emergencia y funcionamiento por piso.</p></div><div class=\'col-span-2 p-2.5 rounded-xl bg-slate-100 border border-slate-200 text-center\'><p class=\'font-bold text-gestionar-dark mb-0.5\'>15. Registro fotográfico</p><p class=\'text-slate-600 font-light\'>Evidencia visual georreferenciada de cada sector sincronizada en Octonar.</p></div></div>')" 
+                             class="flex flex-col items-center justify-center text-center cursor-pointer group p-3 rounded-2xl hover:bg-slate-50 border border-transparent hover:border-slate-200 transition-all">
+                            <div class="w-28 h-28 rounded-2xl bg-slate-100/80 text-gestionar-dark flex items-center justify-center mb-3 group-hover:scale-105 transition-transform border border-slate-200/60 shadow-sm relative">
+                                <span class="absolute -top-2 -right-2 text-[9px] bg-gestionar-main text-white font-bold px-2 py-0.5 rounded-full shadow">15 Puntos</span>
+                                <svg class="w-12 h-12 text-slate-600 group-hover:text-gestionar-main transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <circle cx="12" cy="12" r="9" stroke-width="1.8"></circle>
+                                    <circle cx="12" cy="12" r="3" stroke-width="1.8"></circle>
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M12 2v3m0 14v3M2 12h3m14 0h3"></path>
+                                </svg>
+                            </div>
+                            <span class="text-sm font-bold text-gestionar-dark leading-snug">Puntos de Control</span>
+                        </div>
+
+                        <!-- 4. Registro Visual Detallado (Ícono Cámara) -->
+                        <div onclick="openModal('Registro Visual Detallado', '<div class=\'space-y-3 text-slate-700\'><p class=\'leading-relaxed\'>Fotografía y clasificación sistematizada de riesgos o desvíos normativos detectados durante la inspección de los 15 sectores.</p><p class=\'text-sm bg-slate-100 p-3 rounded-lg border-l-4 border-gestionar-main mt-3\'>Toda la evidencia fotográfica e historial de inspecciones se sincroniza automáticamente en la plataforma <strong>Octonar</strong> para consulta del administrador 24/7.</p></div>')" 
+                             class="flex flex-col items-center justify-center text-center cursor-pointer group p-3 rounded-2xl hover:bg-slate-50 border border-transparent hover:border-slate-200 transition-all">
+                            <div class="w-28 h-28 rounded-2xl bg-slate-100/80 text-gestionar-dark flex items-center justify-center mb-3 group-hover:scale-105 transition-transform border border-slate-200/60 shadow-sm">
+                                <svg class="w-12 h-12 text-slate-600 group-hover:text-gestionar-main transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"></path>
+                                    <circle cx="12" cy="13" r="3" stroke-width="1.8"></circle>
+                                </svg>
+                            </div>
+                            <span class="text-sm font-bold text-gestionar-dark leading-snug">Registro Visual Detallado</span>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+            <!-- BANNER INFERIOR: PLATAFORMA OCTONAR -->
+            <div onclick="openOctonarOnline()" class="w-full rounded-2xl p-4 flex items-center justify-between px-8 cursor-pointer border border-slate-300 shadow-sm hover:shadow-md transition-all group" style="background: linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 50%, #cbd5e1 100%);">
+                <div class="flex items-center gap-5">
+                    <img src="assets/img/isooctonar.fw.svg" alt="Octonar" class="w-12 h-12 object-contain group-hover:scale-105 transition-transform drop-shadow-sm">
+                    <div class="text-left">
+                        <h4 class="text-base font-bold text-slate-800 title-font leading-tight">Plataforma Octonar</h4>
+                        <p class="text-xs text-slate-600 font-normal">Acceso digital y gestión unificada para tu administración 24/7</p>
+                    </div>
+                </div>
+                <div class="px-6 py-2.5 rounded-full bg-gestionar-main text-white text-xs font-bold shadow-sm group-hover:bg-gestionar-dark transition-colors flex items-center gap-2">
+                    <span>Ingresar a la Plataforma</span>
+                    <span class="text-sm">↗</span>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+</div>
+
+
+
+    <!-- ================= 5. PANTALLA SEGUROS ================= -->
+    <div id="screen-seguros" class="screen justify-between p-6">
+        <!-- Header -->
+        <div class="flex justify-between items-center mb-3">
+            <div class="flex items-center gap-4">
+                <img src="assets/img/logo-gestionar.svg" alt="Gestionar" class="logo-header">
+                <span class="text-2xl font-light text-slate-300">|</span>
+                <img src="assets/img/logo-seguros.svg" alt="Seguros" class="logo-header">
+            </div>
+            <div class="flex items-center gap-3">
+                <button onclick="transitionTo('screen-selection')" class="px-5 py-2.5 rounded-full bg-white border border-slate-200 text-gestionar-gray text-xs hover:text-gestionar-dark font-medium shadow-sm transition-all flex items-center gap-1.5">
+                    ← Volver a Productos
+                </button>
+                <button onclick="transitionTo('screen-intro')" class="px-4 py-2.5 rounded-full bg-white border border-slate-200 text-gestionar-gray text-xs hover:text-gestionar-dark font-medium shadow-sm transition-all flex items-center gap-1.5">
+                    <span>✕</span> Salir
+                </button>
+            </div>
+        </div>
+
+        <div class="flex flex-col justify-between gap-4 my-auto h-[82vh] w-full">
+            
+            <!-- Banner Informativo + Logos Proveedores -->
+            <div class="grid grid-cols-12 gap-4 items-stretch">
+                <div class="col-span-8 crystal-bento rounded-2xl p-4 px-6 border border-white shadow-sm flex items-center justify-between bg-gradient-to-r from-white via-slate-50 to-white">
+                    <div class="flex items-center gap-4">
+                        <span class="text-3xl">💡</span>
+                        <div>
+                            <h3 class="text-lg font-bold text-gestionar-dark title-font">¿Por qué convienen los Seguros Gestionar?</h3>
+                            <div class="flex gap-6 text-xs text-gestionar-gray font-medium mt-1">
+                                <span class="flex items-center gap-1.5"><span class="text-gestionar-main font-bold">✓</span> Cotización Inmediata</span>
+                                <span class="flex items-center gap-1.5"><span class="text-gestionar-main font-bold">✓</span> Asesoramiento Especializado</span>
+                                <span class="flex items-center gap-1.5"><span class="text-gestionar-main font-bold">✓</span> Gestión de Siniestros 24/7</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-span-4 crystal-bento rounded-2xl p-3 px-5 border border-white shadow-sm flex items-center justify-center bg-white/90">
+                    <img src="assets/img/proveedores.png" alt="Aseguradoras y Entidades Reguladoras" class="h-10 max-h-10 w-full object-contain mx-auto">
+                </div>
+            </div>
+
+            <!-- Grilla Principal 4 x 2 de Coberturas -->
+            <div class="grid grid-cols-4 gap-4 flex-1 items-center my-auto">
+                
+                <!-- 1. Nuestro Diferencial -->
+                <div onclick="openModal('Nuestro Diferencial', '<ul class=\'space-y-3 text-slate-700\'><li class=\'flex items-start gap-2.5\'><span class=\'text-gestionar-main font-bold mt-0.5\'>✓</span> Especialistas en propiedad horizontal.</li><li class=\'flex items-start gap-2.5\'><span class=\'text-gestionar-main font-bold mt-0.5\'>✓</span> Gestión de renovaciones y actualización de coberturas obligatorias según UF del GCBA.</li><li class=\'flex items-start gap-2.5\'><span class=\'text-gestionar-main font-bold mt-0.5\'>✓</span> Seguimiento proactivo y monitoreo de pólizas para evitar suspensiones.</li><li class=\'flex items-start gap-2.5\'><span class=\'text-gestionar-main font-bold mt-0.5\'>✓</span> Gestión personalizada y acompañamiento integral en siniestros.</li></ul><div class=\'mt-5 pt-3 border-t border-slate-200 text-xs font-semibold text-slate-500 text-center uppercase tracking-wider\'>Federación Patronal • SRT • Gizzi Colombo SRL • SSN</div>')" class="flex flex-col items-center justify-center text-center cursor-pointer group p-2">
+                    <div class="w-24 h-24 rounded-[22px] bg-[#d8f3f6] text-gestionar-dark flex items-center justify-center mb-2 icon-float border border-gestionar-main/20 shadow-sm">
+                        <svg class="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path></svg>
+                    </div>
+                    <span class="text-sm font-bold text-slate-800 leading-tight">Nuestro Diferencial</span>
+                    <span class="text-xs text-slate-500 font-medium mt-1">Servicio Exclusivo</span>
+                </div>
+
+                <!-- 2. Incendio -->
+                <div onclick="openModal('Cobertura de Incendio', '<p class=\'text-slate-700 leading-relaxed\'>Cobertura para edificio y contenido en partes propias y comunes, con suma asegurada acorde a las necesidades del consorcio.</p>')" class="flex flex-col items-center justify-center text-center cursor-pointer group p-2">
+                    <div class="w-24 h-24 rounded-[22px] bg-[#d8f3f6] text-gestionar-dark flex items-center justify-center mb-2 icon-float border border-gestionar-main/20 shadow-sm">
+                        <svg class="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M17.657 18.657A8 8 0 016.343 7.343S7 9 9 10c0-2 1-5 4-6 1.286 1.838 2 4.162 2 6 1 0 2.657-.802 2.657-2.802A8 8 0 0117.657 18.657z"></path></svg>
+                    </div>
+                    <span class="text-sm font-bold text-slate-800 leading-tight">Incendio</span>
+                    <span class="text-xs text-slate-500 font-medium mt-1">Edificio y Contenido</span>
+                </div>
+
+                <!-- 3. Tensión Eléctrica -->
+                <div onclick="openModal('Tensión Eléctrica', '<p class=\'text-slate-700 leading-relaxed\'>Protección ante daños materiales en instalaciones y equipos ocasionados por variaciones bruscas de tensión eléctrica.</p>')" class="flex flex-col items-center justify-center text-center cursor-pointer group p-2">
+                    <div class="w-24 h-24 rounded-[22px] bg-[#d8f3f6] text-gestionar-dark flex items-center justify-center mb-2 icon-float border border-gestionar-main/20 shadow-sm">
+                        <svg class="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+                    </div>
+                    <span class="text-sm font-bold text-slate-800 leading-tight">Tensión Eléctrica</span>
+                    <span class="text-xs text-slate-500 font-medium mt-1">Daños en Equipos</span>
+                </div>
+
+                <!-- 4. Agua -->
+                <div onclick="openModal('Daños por Agua', '<p class=\'text-slate-700 leading-relaxed\'>Cobertura contra daños materiales provocados por filtración, rotura o derrame de aguas cloacales y pluviales en partes propias y comunes.</p>')" class="flex flex-col items-center justify-center text-center cursor-pointer group p-2">
+                    <div class="w-24 h-24 rounded-[22px] bg-[#d8f3f6] text-gestionar-dark flex items-center justify-center mb-2 icon-float border border-gestionar-main/20 shadow-sm">
+                        <svg class="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z"></path></svg>
+                    </div>
+                    <span class="text-sm font-bold text-slate-800 leading-tight">Agua</span>
+                    <span class="text-xs text-slate-500 font-medium mt-1">Filtraciones y Caños</span>
+                </div>
+
+                <!-- 5. Vehículos -->
+                <div onclick="openModal('Protección de Vehículos', '<p class=\'text-slate-700 leading-relaxed\'>Cobertura para daños parciales a vehículos estacionados ocasionados por maniobras del encargado en las cocheras del edificio.</p>')" class="flex flex-col items-center justify-center text-center cursor-pointer group p-2">
+                    <div class="w-24 h-24 rounded-[22px] bg-[#d8f3f6] text-gestionar-dark flex items-center justify-center mb-2 icon-float border border-gestionar-main/20 shadow-sm">
+                        <svg class="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M8 17a2 2 0 100 4 2 2 0 000-4zm8 0a2 2 0 100 4 2 2 0 000-4zM3 9l2-4h10l2 4M3 9h18v7a1 1 0 01-1 1H4a1 1 0 01-1-1V9z"></path></svg>
+                    </div>
+                    <span class="text-sm font-bold text-slate-800 leading-tight">Vehículos</span>
+                    <span class="text-xs text-slate-500 font-medium mt-1">Guarda y Cocheras</span>
+                </div>
+
+                <!-- 6. Robo e Intento de Robo -->
+                <div onclick="openModal('Robo e Intento de Robo', '<p class=\'text-slate-700 leading-relaxed\'>Protección integral para mobiliario común, elementos de seguridad (lanzas y mangueras contra incendio), porteros eléctricos y reparación de daños materiales tras un intento de robo.</p>')" class="flex flex-col items-center justify-center text-center cursor-pointer group p-2">
+                    <div class="w-24 h-24 rounded-[22px] bg-[#d8f3f6] text-gestionar-dark flex items-center justify-center mb-2 icon-float border border-gestionar-main/20 shadow-sm">
+                        <svg class="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path></svg>
+                    </div>
+                    <span class="text-sm font-bold text-slate-800 leading-tight">Robo e Intento</span>
+                    <span class="text-xs text-slate-500 font-medium mt-1">Bienes Comunes</span>
+                </div>
+
+                <!-- 7. Cristales y Cristalero -->
+                <div onclick="openModal('Cristales y Cristalero', '<p class=\'text-slate-700 leading-relaxed\'>Cobertura para rotura de aleros de planta baja, cristales en fachadas comerciales o accesos principales del consorcio, junto con servicio especializado de reposición de cristales.</p>')" class="flex flex-col items-center justify-center text-center cursor-pointer group p-2">
+                    <div class="w-24 h-24 rounded-[22px] bg-[#d8f3f6] text-gestionar-dark flex items-center justify-center mb-2 icon-float border border-gestionar-main/20 shadow-sm">
+                        <svg class="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M4 5a1 1 0 011-1h14a1 1 0 011 1v14a1 1 0 01-1 1H5a1 1 0 01-1-1V5zM4 12h16M12 4v16"></path></svg>
+                    </div>
+                    <span class="text-sm font-bold text-slate-800 leading-tight">Cristales y Cristalero</span>
+                    <span class="text-xs text-slate-500 font-medium mt-1">Reposición Directa</span>
+                </div>
+
+                <!-- 8. Ampliá tu Protección -->
+                <div onclick="openModal('Ampliá tu Protección', '<div class=\'space-y-3 text-slate-700\'><p class=\'font-semibold text-gestionar-dark mb-2\'>Coberturas complementarias e integrales para el consorcio y su personal:</p><ul class=\'space-y-2.5 text-sm\'><li class=\'flex items-start gap-2.5\'><span class=\'text-gestionar-main font-bold mt-0.5\'>•</span> <span><strong>Responsabilidad Civil:</strong> Cobertura frente a reclamos de terceros por partes comunes, ascensores, calderas, obras y cocheras.</span></li><li class=\'flex items-start gap-2.5\'><span class=\'text-gestionar-main font-bold mt-0.5\'>•</span> <span><strong>A.R.T. (Riesgos del Trabajo):</strong> Póliza obligatoria de protección para el personal frente a accidentes laborales según normativas de la SRT.</span></li><li class=\'flex items-start gap-2.5\'><span class=\'text-gestionar-main font-bold mt-0.5\'>•</span> <span><strong>Accidentes Personales:</strong> Protección médica e indemnizatoria para prestadores independientes y contratistas eventuales.</span></li><li class=\'flex items-start gap-2.5\'><span class=\'text-gestionar-main font-bold mt-0.5\'>•</span> <span><strong>Vida Colectivo / Obligatorio:</strong> Cobertura de vida obligatoria para el personal de propiedad horizontal según convenio.</span></li></ul></div>')" class="flex flex-col items-center justify-center text-center cursor-pointer group p-2">
+                    <div class="w-24 h-24 rounded-[22px] bg-[#d8f3f6] text-gestionar-dark flex items-center justify-center mb-2 icon-float border border-gestionar-main/20 shadow-sm">
+                        <svg class="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                    </div>
+                    <span class="text-sm font-bold text-slate-800 leading-tight">Ampliá tu Protección</span>
+                    <span class="text-xs text-slate-500 font-medium mt-1">Adicionales a Medida</span>
+                </div>
+
+            </div>
+
+            <!-- Pie de página: Plataforma Octonar (Abre Modal Kiosco) -->
+            <div onclick="openOctonarOnline()" class="w-full rounded-2xl p-4 flex items-center justify-between px-8 cursor-pointer border border-slate-300 shadow-sm hover:shadow-md transition-all group" style="background: linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 50%, #cbd5e1 100%);">
+                <div class="flex items-center gap-5">
+                    <img src="assets/img/isooctonar.fw.svg" alt="Octonar" class="w-14 h-14 object-contain group-hover:scale-105 transition-transform drop-shadow-sm">
+                    <div class="text-left">
+                        <h4 class="text-lg font-bold text-slate-800 title-font leading-tight">Plataforma Octonar</h4>
+                        <p class="text-xs text-slate-600 font-normal">Acceso digital y gestión unificada para tu administración 24/7</p>
+                    </div>
+                </div>
+                <div class="px-6 py-2.5 rounded-full bg-gestionar-main text-white text-xs font-bold shadow-sm group-hover:bg-gestionar-dark transition-colors flex items-center gap-2">
+                    <span>Ingresar a la Plataforma</span>
+                    <span class="text-sm">↗</span>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- ================= MODAL KIOSCO PLATAFORMA OCTONAR ONLINE ================= -->
+    <div id="modal-octonar-online" class="fixed inset-0 z-50 bg-slate-950 flex flex-col" style="display: none !important;">
+        <!-- Barra de Control Superior -->
+        <div class="bg-slate-900 text-white h-20 px-8 flex justify-between items-center border-b border-slate-800 shadow-xl shrink-0">
+            <div class="flex items-center gap-4">
+                <img src="assets/img/isooctonar.fw.svg" alt="Octonar" class="w-10 h-10 object-contain">
+                <div>
+                    <span class="font-bold text-lg text-slate-100 block leading-tight">Plataforma Octonar Online</span>
+                    <span class="text-xs text-emerald-400 font-medium">● Demo en Vivo</span>
+                </div>
+            </div>
+            
+            <button onclick="closeOctonarOnline()" class="px-8 py-3.5 rounded-full bg-amber-400 text-slate-950 font-black text-base hover:bg-amber-300 transition-transform active:scale-95 shadow-lg flex items-center gap-2 cursor-pointer">
+                ← VOLVER AL KIOSCO
+            </button>
+        </div>
+        
+        <!-- Iframe de la plataforma online -->
+        <div class="flex-1 w-full h-full bg-white relative">
+            <iframe id="iframe-octonar-live" src="" class="w-full h-full border-0"></iframe>
+        </div>
+    </div>
+
+    <!-- Librerías y Scripts -->
+    <script src="js/app.js" defer></script>
+</body>
+</html>
